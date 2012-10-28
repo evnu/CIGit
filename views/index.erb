@@ -3,6 +3,7 @@
 
 <head>
     <title>CIGit Test Status</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
     <h1>Test Status</h1>
@@ -14,7 +15,8 @@
         <% commits.each do |rev| %>
             <tr>
                 <td><%= rev.first %></td>
-                <td><%= rev[1..-1].join(" ") %></td>
+                <% status = rev[1..-1].join(" ") %>
+                <td class="<%= status %>"><%= status %></td>
             </tr>
         <% end %>
     </table>
