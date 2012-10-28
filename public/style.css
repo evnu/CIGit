@@ -1,7 +1,7 @@
 .fails {
-    background-color: red; 
+    background-color: #FF7070;
 }
 
 .builds {
-    background-color: green;
+    background-color: #7CFF70;
 }
