@@ -15,6 +15,9 @@ Simple Continuous Integration for Git Repositories
 This is a work in progress. The following things should be implemented soon:
 * Persistency: The build status is lost on machine reboot, as everything is currently
 stored in `tmp`
+* Some applications might need a configuration step before the testsuite can be run; there
+should be a hook in the test process to configure what has to be done with a newly created
+repository.
 
 # Running the Runner
 The main script of CIGit is the test runner `runner.sh`. It reads a buffer of revisions
