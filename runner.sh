@@ -40,6 +40,10 @@ do
                 RUN_FILE=$RUN_DIR/runner_$$
                 >$RUN_FILE
                 TMP=$(mktemp -d) 
+
+                # trap exists
+                trap 'rm -f $RUN_FILE $TMP' EXIT
+
                 cd $TMP
                 # checkout the revision without cloning everything
                 git init
@@ -50,7 +54,6 @@ do
                     echo "$REV fails") >> $BUILD_LOG
                 cd /
 
-                # TODO ensure that those files are deleted even when the script aborts
                 rm -rf $TMP $RUN_FILE
             ) &> /dev/null &
         ) 200>> $LOCK
