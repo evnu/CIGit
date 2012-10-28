@@ -2,7 +2,7 @@
 
 EXCHANGE=/tmp/.exchange_revs
 LOCK=/tmp/.exchange.lock
-BUILD_LOG=/tmp/build_log
+BUILD_LOG=/tmp/.build_log
 MAX_RUNNERS=1
 RUN_DIR=/tmp
 
@@ -37,16 +37,20 @@ do
             sed -i -e "1d" $EXCHANGE
             # set up test runner
             (
-                RUN_FILE=$TMP/runner_$$
+                RUN_FILE=$RUN_DIR/runner_$$
                 >$RUN_FILE
                 TMP=$(mktemp -d) 
                 cd $TMP
-                git clone /tmp/hooks/remote remote
-                cd remote
+                # checkout the revision without cloning everything
+                git init
+                git remote add origin $REPO
+                git fetch origin
                 git checkout $REV
                 (make test &> /dev/null && echo "$REV builds" || \
                     echo "$REV fails") >> $BUILD_LOG
                 cd /
+
+                # TODO ensure that those files are deleted even when the script aborts
                 rm -rf $TMP $RUN_FILE
             ) &> /dev/null &
         ) 200>> $LOCK
