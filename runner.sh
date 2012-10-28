@@ -42,7 +42,7 @@ do
                 TMP=$(mktemp -d) 
 
                 # trap exists
-                trap 'rm -f $RUN_FILE $TMP' EXIT
+                trap 'rm -r $RUN_FILE $TMP' EXIT
 
                 cd $TMP
                 # checkout the revision without cloning everything
@@ -50,11 +50,20 @@ do
                 git remote add origin $REPO
                 git fetch origin
                 git checkout $REV
-                (make test &> /dev/null && echo "$REV builds" || \
-                    echo "$REV fails") >> $BUILD_LOG
-                cd /
 
-                rm -rf $TMP $RUN_FILE
+                # run the test
+                ./configure
+                make test
+                if [ $? -eq 0 ];
+                then
+                    echo $REV builds
+                else
+                    echo $REV fails
+                fi >> $BUILD_LOG
+
+                cd -
+
+                rm -r $TMP $RUN_FILE
             ) &> /dev/null &
         ) 200>> $LOCK
     else
